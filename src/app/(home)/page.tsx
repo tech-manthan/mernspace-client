@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 
 export default function Home() {
@@ -27,6 +28,22 @@ export default function Home() {
               height={400}
             />
           </div>
+        </div>
+      </section>
+      <section>
+        <div className="container mx-auto py-12">
+          <Tabs defaultValue="pizza" className="w-[400px]">
+            <TabsList>
+              <TabsTrigger value="pizza" className="text-base">
+                Pizza
+              </TabsTrigger>
+              <TabsTrigger value="beverages" className="text-base">
+                Beverages
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="pizza">Pizza List</TabsContent>
+            <TabsContent value="beverages">Beverages List</TabsContent>
+          </Tabs>
         </div>
       </section>
     </>
