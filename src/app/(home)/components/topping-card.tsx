@@ -35,6 +35,7 @@ const ToppingCard = ({ topping, isSelected }: ToppingCardPropTypes) => {
           width={80}
           height={80}
           className="mx-auto"
+          unoptimized
         />
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center mb-2">

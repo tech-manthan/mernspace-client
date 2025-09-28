@@ -1,14 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Phone, ShoppingBasket } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import SelectRestaurant from "./select-restaurant";
 
 const Header = () => {
   return (
@@ -35,16 +31,7 @@ const Header = () => {
               fill="#484848"
             />
           </svg>
-          <Select>
-            <SelectTrigger className="w-[180px] focus-visible:ring-0">
-              <SelectValue placeholder={"Select Restaurant"} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="cheesy-delight">Cheesy Delight</SelectItem>
-              <SelectItem value="pizza-hut">Pizza Hut</SelectItem>
-              <SelectItem value="kids-corner">Kids Corner</SelectItem>
-            </SelectContent>
-          </Select>
+          <SelectRestaurant />
         </div>
         <div className="flex items-center gap-x-4">
           <ul className="flex items-center font-medium gap-4">
