@@ -20,6 +20,10 @@ const ToppingList = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetInfiniteToppings(categoryId, tenantId);
 
+  const allToppings =
+    data?.pages.flatMap((page) => page.data as Topping[]) ?? [];
+  if (!allToppings.length) return null;
+
   // Jab last element viewport me aata hai toh next page fetch ho
   if (inView && hasNextPage && !isFetchingNextPage) {
     fetchNextPage();
