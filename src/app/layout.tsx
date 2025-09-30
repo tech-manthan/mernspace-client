@@ -4,7 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Header from "@/components/custom/header";
 import { Toaster } from "sonner";
-import ReactQuery from "@/providers/ReactQuery";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import StoreProvider from "@/providers/StoreProvider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -29,11 +30,13 @@ export default function RootLayout({
           manrope.variable
         )}
       >
-        <ReactQuery>
-          <Header />
-          <main>{children}</main>
-          <Toaster />
-        </ReactQuery>
+        <StoreProvider>
+          <ReactQueryProvider>
+            <Header />
+            <main>{children}</main>
+            <Toaster richColors position="top-center" />
+          </ReactQueryProvider>
+        </StoreProvider>
       </body>
     </html>
   );

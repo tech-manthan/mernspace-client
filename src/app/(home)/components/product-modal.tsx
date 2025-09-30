@@ -1,6 +1,7 @@
 import { Product } from "@/types/product.types";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -12,8 +13,69 @@ import Image from "next/image";
 import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { startTransition, useState } from "react";
+import { Topping } from "@/types/topping.types";
+import { Badge } from "@/components/ui/badge";
+import { useAppDispatch } from "@/store/hooks";
+import { addToCart } from "@/store/features/cart/cartSlice";
+import { toast } from "sonner";
+
+interface ChoosenConfig {
+  [key: string]: string;
+}
 
 const ProductModal = ({ product }: { product: Product }) => {
+  const defaultConfig = Object.entries(product.category.priceConfiguration)
+    .map(([key, value]) => {
+      return {
+        [key]: value.availableOptions[0],
+      };
+    })
+    .reduce((prev, current) => {
+      return {
+        ...prev,
+        ...current,
+      };
+    }, {});
+  const [choosenConfig, setChoosenConfig] =
+    useState<ChoosenConfig>(defaultConfig);
+
+  const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+  const dispatch = useAppDispatch();
+
+  function handleChoosenConfig(key: string, value: string) {
+    startTransition(() => {
+      setChoosenConfig((prev) => {
+        return { ...prev, [key]: value };
+      });
+    });
+  }
+
+  const handleToppingToggle = (topping: Topping, checked: boolean) => {
+    startTransition(() => {
+      setSelectedToppings((prev) =>
+        checked
+          ? [...prev, topping]
+          : prev.filter((item) => item._id !== topping._id)
+      );
+    });
+  };
+
+  function handleAddToCart() {
+    dispatch(
+      addToCart({
+        product: product,
+        choosenConfiguration: {
+          priceConfiguration: choosenConfig,
+          selectedToppings: selectedToppings,
+        },
+        qty: 1,
+      })
+    );
+    toast.success("product added to cart");
+  }
+
   return (
     <Dialog>
       <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
@@ -38,15 +100,35 @@ const ProductModal = ({ product }: { product: Product }) => {
             <DialogDescription className="mt-1 line-clamp-3 break-words">
               {product.description}
             </DialogDescription>
+            <div className="text-sm mt-2 flex items-center flex-wrap gap-x-2">
+              {product.attributes.map((attribute) => {
+                return (
+                  <div key={attribute.name}>
+                    <Badge variant={"outline"} className="px-3 py-2">
+                      <span className="font-semibold">{attribute.name}</span>:
+                      <span className="text-primary">
+                        {attribute.value as string}
+                      </span>
+                    </Badge>
+                  </div>
+                );
+              })}
+            </div>
 
             {Object.entries(product.category.priceConfiguration).map(
               ([key, value]) => {
+                // handleChoosenConfig(key, value.availableOptions[0]);
                 return (
                   <div className="mt-6" key={key}>
-                    <h4 className="text-base">Choose the {key}</h4>
+                    <h4 className="text-base font-semibold">
+                      Choose the {key}
+                    </h4>
 
                     <RadioGroup
                       defaultValue={value.availableOptions[0]}
+                      onValueChange={(data) => {
+                        handleChoosenConfig(key, data);
+                      }}
                       className="grid grid-cols-3 gap-4 mt-2"
                     >
                       {value.availableOptions.map((option) => {
@@ -77,15 +159,22 @@ const ProductModal = ({ product }: { product: Product }) => {
               <ToppingList
                 categoryId={product.categoryId}
                 tenantId={Number(product.tenantId)}
+                selectedToppings={selectedToppings}
+                handleToppingToggle={handleToppingToggle}
               />
             </div>
 
             <div className="mt-8 flex justify-between items-center">
               <span className="font-bold text-lg">₹ 400</span>
-              <Button className="rounded hover:cursor-pointer">
-                <ShoppingCart />
-                <span>Add to cart</span>
-              </Button>
+              <DialogClose asChild>
+                <Button
+                  className="rounded hover:cursor-pointer"
+                  onClick={handleAddToCart}
+                >
+                  <ShoppingCart />
+                  <span>Add to cart</span>
+                </Button>
+              </DialogClose>
             </div>
           </div>
         </div>

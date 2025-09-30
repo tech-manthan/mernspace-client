@@ -15,17 +15,24 @@ import {
   CommandList,
 } from "../ui/command";
 import { useGetInfiniteRestaurants } from "@/hooks/useGetInfiniteRestaurants";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setRestaurant } from "@/store/features/restaurant/restaurantSlice";
 
 export default function SelectRestaurant() {
   const [open, setOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  // const [selectedId, setSelectedId] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
+
+  const selectedId = useAppSelector((state) => state.restaurant.tenantId);
+  const dispatch = useAppDispatch();
 
   const { data, fetchNextPage, isFetchingNextPage } =
     useGetInfiniteRestaurants(search);
 
-  const restaurants = data?.pages.flatMap((page) => page.data) ?? [];
+  const restaurants = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) ?? [];
+  }, [data]);
   const total = data?.pages[0]?.total ?? 0;
 
   const debouncedSetSearch = useMemo(
@@ -41,15 +48,21 @@ export default function SelectRestaurant() {
     debouncedSetSearch(val);
   };
 
-  useEffect(() => {
-    return () => debouncedSetSearch.cancel(); // cleanup
-  }, [debouncedSetSearch]);
-
   const loadMore = () => {
     if (restaurants.length < total && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
+
+  useEffect(() => {
+    if (restaurants.length > 0) {
+      dispatch(setRestaurant(restaurants[0].id));
+    }
+  }, [dispatch, restaurants]);
+
+  useEffect(() => {
+    return () => debouncedSetSearch.cancel(); // cleanup
+  }, [debouncedSetSearch]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -115,7 +128,9 @@ export default function SelectRestaurant() {
                   value={String(restaurant.id)}
                   onSelect={(val) => {
                     const id = Number(val);
-                    setSelectedId(id === selectedId ? null : id);
+                    // setSelectedId(id === selectedId ? null : id);
+                    dispatch(setRestaurant(id === selectedId ? null : id));
+
                     setOpen(false);
                   }}
                 >

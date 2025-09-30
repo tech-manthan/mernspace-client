@@ -1,17 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Topping } from "@/types/topping.types";
 import { CircleCheck } from "lucide-react";
 
 import Image from "next/image";
-
-export type Topping = {
-  _id: string;
-  name: string;
-  image: string;
-  isPublish: boolean;
-  price: number;
-  tenantId: string;
-  categoryId: string;
-};
 
 type ToppingCardPropTypes = {
   topping: Topping;

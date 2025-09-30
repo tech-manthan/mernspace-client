@@ -1,14 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { Phone, ShoppingBasket } from "lucide-react";
-import { Badge } from "../ui/badge";
+import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import SelectRestaurant from "./select-restaurant";
+import CartCounter from "./cart-counter";
 
 const Header = () => {
   return (
-    <header className="bg-white">
+    <header className="bg-white sticky top-0 left-0 right-0 shadow z-10">
       <nav className="container mx-auto py-5 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <svg
@@ -46,14 +44,7 @@ const Header = () => {
               </Link>
             </li>
           </ul>
-          <div className="relative">
-            <Link href={"/"} className="hover:text-primary duration-300">
-              <ShoppingBasket />
-            </Link>
-            <Badge className="h-6 w-6 rounded-full px-1 font-mono tabular-nums absolute -top-4 -right-5">
-              3
-            </Badge>
-          </div>
+          <CartCounter />
           <div className="flex items-center gap-x-2 ml-12 hover:text-primary duration-300">
             <Phone />
             <span>+91 7878 333 222</span>
