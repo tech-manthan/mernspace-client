@@ -49,9 +49,9 @@ const ProductModal = ({ product }: { product: Product }) => {
     );
 
     const chosenConfigPrice = Object.entries(choosenConfig).reduce(
-      (acc, curr) => {
+      (acc, [key, option]) => {
         const chosenPrice =
-          product.priceConfiguration[curr[0]].availableOptions[curr[1]];
+          product.priceConfiguration[key].availableOptions[option];
 
         return acc + chosenPrice;
       },
@@ -119,7 +119,7 @@ const ProductModal = ({ product }: { product: Product }) => {
             <DialogDescription className="mt-1 line-clamp-3 break-words">
               {product.description}
             </DialogDescription>
-            <div className="text-sm mt-2 flex items-center flex-wrap gap-x-2">
+            <div className="text-sm mt-2 flex items-center flex-wrap gap-2">
               {product.attributes.map((attribute) => {
                 return (
                   <div key={attribute.name}>
@@ -152,7 +152,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                     >
                       {value.availableOptions.map((option) => {
                         return (
-                          <div key={option}>
+                          <div key={option} className="h-full">
                             <RadioGroupItem
                               value={option}
                               id={option}
@@ -161,7 +161,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                             />
                             <Label
                               htmlFor={option}
-                              className="flex items-center justify-center rounded border-2 bg-white px-4 py-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                              className="flex h-full w-full items-center justify-center rounded border-2 bg-white px-4 py-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                             >
                               {option}
                             </Label>
