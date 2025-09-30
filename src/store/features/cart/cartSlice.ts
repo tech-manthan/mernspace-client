@@ -15,13 +15,20 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
+      const cartItems = [...state.cartItems, action.payload];
+      window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return {
-        cartItems: [...state.cartItems, action.payload],
+        cartItems: cartItems,
+      };
+    },
+    setInitialCart: (state, action: PayloadAction<CartItem[]>) => {
+      return {
+        cartItems: action.payload,
       };
     },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, setInitialCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

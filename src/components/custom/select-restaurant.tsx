@@ -17,6 +17,7 @@ import {
 import { useGetInfiniteRestaurants } from "@/hooks/useGetInfiniteRestaurants";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setRestaurant } from "@/store/features/restaurant/restaurantSlice";
+import { useGetRestaurant } from "@/hooks/useGetRestaurant";
 
 export default function SelectRestaurant() {
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function SelectRestaurant() {
   const [inputValue, setInputValue] = useState("");
 
   const selectedId = useAppSelector((state) => state.restaurant.tenantId);
+  const { data: restaurant } = useGetRestaurant(selectedId);
   const dispatch = useAppDispatch();
 
   const { data, fetchNextPage, isFetchingNextPage } =
@@ -55,10 +57,10 @@ export default function SelectRestaurant() {
   };
 
   useEffect(() => {
-    if (restaurants.length > 0) {
+    if (!selectedId && restaurants.length > 0) {
       dispatch(setRestaurant(restaurants[0].id));
     }
-  }, [dispatch, restaurants]);
+  }, [dispatch, restaurants, selectedId]);
 
   useEffect(() => {
     return () => debouncedSetSearch.cancel(); // cleanup
@@ -74,7 +76,9 @@ export default function SelectRestaurant() {
           className="w-[200px] justify-between border-2 focus:ring-2 ring-primary"
         >
           {selectedId
-            ? restaurants.find((r) => r.id === selectedId)?.name
+            ? restaurant
+              ? restaurant?.name
+              : restaurants.find((r) => r.id === selectedId)?.name
             : "Select Restaurant"}
           <ChevronsUpDown className="opacity-50" />
         </Button>

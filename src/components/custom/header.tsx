@@ -3,6 +3,9 @@ import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import SelectRestaurant from "./select-restaurant";
 import CartCounter from "./cart-counter";
+// import dynamic from "next/dynamic";
+
+// const SelectRestaurantWithoutSSR = dynamic(()=>import("./select-restaurant"),{ssr:false})
 
 const Header = () => {
   return (
@@ -30,6 +33,7 @@ const Header = () => {
             />
           </svg>
           <SelectRestaurant />
+          {/* <SelectRestaurantWithoutSSR/> */}
         </div>
         <div className="flex items-center gap-x-4">
           <ul className="flex items-center font-medium gap-4">

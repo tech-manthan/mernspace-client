@@ -1,6 +1,9 @@
 "use client";
+import { setInitialCart } from "@/store/features/cart/cartSlice";
+import { setRestaurant } from "@/store/features/restaurant/restaurantSlice";
 import { AppStore, makeStore } from "@/store/store";
-import { useRef } from "react";
+import { CartItem } from "@/types/cart.types";
+import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 
 export default function StoreProvider({
@@ -10,9 +13,27 @@ export default function StoreProvider({
 }) {
   const storeRef = useRef<AppStore>(undefined);
   if (!storeRef.current) {
-    // Create the store instance the first time this renders
     storeRef.current = makeStore();
   }
+
+  useEffect(() => {
+    try {
+      const cartItems = window.localStorage.getItem("cartItems");
+      const tenantId = window.localStorage.getItem("tenantId");
+
+      if (tenantId) {
+        const parsedTenantId: number = JSON.parse(tenantId);
+        storeRef.current?.dispatch(setRestaurant(parsedTenantId));
+      }
+
+      if (cartItems) {
+        const parsedCartItems: CartItem[] = JSON.parse(cartItems);
+        storeRef.current?.dispatch(setInitialCart(parsedCartItems));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 }

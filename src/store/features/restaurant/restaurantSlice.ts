@@ -13,6 +13,7 @@ export const restaurantSlice = createSlice({
   initialState,
   reducers: {
     setRestaurant: (state, { payload }: PayloadAction<number | null>) => {
+      window.localStorage.setItem("tenantId", JSON.stringify(payload));
       state.tenantId = payload;
     },
   },
