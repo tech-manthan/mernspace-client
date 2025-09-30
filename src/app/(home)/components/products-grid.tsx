@@ -16,8 +16,15 @@ import ProductCard from "./product-card";
 import { debounce } from "lodash";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { toast } from "sonner";
+import { useAppSelector } from "@/store/hooks";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type ProductsGridProps = {
   activeCategory: string;
@@ -27,12 +34,13 @@ const ProductsGrid = ({ activeCategory }: ProductsGridProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [inputValue, setInputValue] = useState("");
   const [search, setSearch] = useState("");
+  const tenantId = useAppSelector((state) => state.restaurant.tenantId);
 
   const { data, isLoading, isError, error } = useGetProducts({
     currentPage,
     perPage: 8,
     categoryId: activeCategory,
-    tenantId: "1",
+    tenantId: tenantId ? String(tenantId) : "",
     q: search,
     isPublish: true,
   });
@@ -52,6 +60,7 @@ const ProductsGrid = ({ activeCategory }: ProductsGridProps) => {
   };
 
   const products = data?.data ?? [];
+
   const pagination = {
     currentPage: data?.currentPage ?? 1,
     perPage: data?.perPage ?? 8,
@@ -79,6 +88,19 @@ const ProductsGrid = ({ activeCategory }: ProductsGridProps) => {
       toast.error(error.message);
     }
   }, [isError, error]);
+
+  if (!products.length) {
+    return (
+      <Card className="flex p-8 mt-6 text-center">
+        <CardHeader>
+          <CardTitle>No products found</CardTitle>
+          <CardDescription>
+            We couldn&apos;t find any content. Select different restaurant
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
     <>
