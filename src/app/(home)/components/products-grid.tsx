@@ -15,7 +15,7 @@ import {
 import ProductCard from "./product-card";
 import { debounce } from "lodash";
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
+import { OctagonX, Search, X } from "lucide-react";
 
 import { toast } from "sonner";
 import { useAppSelector } from "@/store/hooks";
@@ -91,11 +91,15 @@ const ProductsGrid = ({ activeCategory }: ProductsGridProps) => {
 
   if (!products.length) {
     return (
-      <Card className="flex p-8 mt-6 text-center">
+      <Card className="flex h-80 p-8 mt-6 text-center bg-transparent border-dashed border-2 justify-center">
         <CardHeader>
-          <CardTitle>No products found</CardTitle>
-          <CardDescription>
-            We couldn&apos;t find any content. Select different restaurant
+          <CardTitle className="text-2xl flex flex-col items-center">
+            <OctagonX className="text-gray-500 size-10" />
+            <span>No products found</span>
+          </CardTitle>
+          <CardDescription className="text-lg w-96 mx-auto">
+            We couldn&apos;t find any products. Select different restaurant or
+            different category
           </CardDescription>
         </CardHeader>
       </Card>
