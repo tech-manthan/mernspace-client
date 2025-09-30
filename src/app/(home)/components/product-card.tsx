@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
 import Image from "next/image";
 import { Product } from "@/types/product.types";
 import ProductModal from "./product-modal";
+import { getProductMinimumPrice } from "@/lib/get-product-minimum-price";
 
 type ProductCardPropTypes = {
   product: Product;
@@ -34,7 +34,7 @@ const ProductCard = ({ product }: ProductCardPropTypes) => {
       <CardFooter className="flex items-center justify-between mt-4">
         <p>
           <span>From </span>
-          <span className="font-bold">₹ {100}</span>
+          <span className="font-bold">₹ {getProductMinimumPrice(product)}</span>
         </p>
         <ProductModal product={product} />
       </CardFooter>
