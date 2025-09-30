@@ -16,15 +16,18 @@ import { Button } from "@/components/ui/button";
 import { startTransition, useMemo, useState } from "react";
 import { Topping } from "@/types/topping.types";
 import { Badge } from "@/components/ui/badge";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/features/cart/cartSlice";
 import { toast } from "sonner";
+import { getCartItemHash } from "@/lib/get-cart-item-hash";
+import { cn } from "@/lib/utils";
 
 interface ChoosenConfig {
   [key: string]: string;
 }
 
 const ProductModal = ({ product }: { product: Product }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const defaultConfig = Object.entries(product.category.priceConfiguration)
     .map(([key, value]) => {
       return {
@@ -61,7 +64,31 @@ const ProductModal = ({ product }: { product: Product }) => {
     return toppingsPrice + chosenConfigPrice;
   }, [choosenConfig, selectedToppings, product]);
 
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
+
+  const alreadyInsideCart = useMemo(() => {
+    const hash = getCartItemHash({
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      categoryId: product.categoryId,
+      tenantId: product.tenantId,
+      priceConfiguration: product.priceConfiguration,
+      choosenConfiguration: {
+        priceConfiguration: choosenConfig,
+        selectedToppings: selectedToppings,
+      },
+    });
+
+    return cartItems.some((item) => item.hash === hash);
+  }, [cartItems, choosenConfig, product, selectedToppings]);
+
   const dispatch = useAppDispatch();
+
+  function handleDialogOpen(open: boolean) {
+    setDialogOpen(open);
+    setSelectedToppings([]);
+  }
 
   function handleChoosenConfig(key: string, value: string) {
     startTransition(() => {
@@ -84,19 +111,24 @@ const ProductModal = ({ product }: { product: Product }) => {
   function handleAddToCart() {
     dispatch(
       addToCart({
-        product: product,
+        _id: product._id,
+        name: product.name,
+        image: product.image,
+        categoryId: product.categoryId,
+        tenantId: product.tenantId,
+        priceConfiguration: product.priceConfiguration,
         choosenConfiguration: {
           priceConfiguration: choosenConfig,
           selectedToppings: selectedToppings,
         },
-        qty: 1,
       })
     );
+    setSelectedToppings([]);
     toast.success("product added to cart");
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={handleDialogOpen}>
       <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
         Choose
       </DialogTrigger>
@@ -187,11 +219,17 @@ const ProductModal = ({ product }: { product: Product }) => {
               <span className="font-bold text-lg">₹ {productPrice}</span>
               <DialogClose asChild>
                 <Button
-                  className="rounded hover:cursor-pointer"
+                  className={cn(
+                    "rounded hover:cursor-pointer",
+                    alreadyInsideCart && " bg-green-500"
+                  )}
                   onClick={handleAddToCart}
+                  disabled={alreadyInsideCart}
                 >
                   <ShoppingCart />
-                  <span>Add to cart</span>
+                  <span>
+                    {alreadyInsideCart ? "Added to cart" : "Add to cart"}
+                  </span>
                 </Button>
               </DialogClose>
             </div>

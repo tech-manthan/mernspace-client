@@ -1,4 +1,5 @@
-import { CartItem } from "@/types/cart.types";
+import { getCartItemHash } from "@/lib/get-cart-item-hash";
+import { CartItem, CartItemAdd } from "@/types/cart.types";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -14,8 +15,12 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<CartItem>) => {
-      const cartItems = [...state.cartItems, action.payload];
+    addToCart: (state, action: PayloadAction<CartItemAdd>) => {
+      const hash = getCartItemHash(action.payload);
+      const cartItems = [
+        ...state.cartItems,
+        { ...action.payload, qty: 1, hash: hash },
+      ];
       window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return {
         cartItems: cartItems,
