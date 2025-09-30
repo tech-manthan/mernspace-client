@@ -13,7 +13,7 @@ import Image from "next/image";
 import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { startTransition, useState } from "react";
+import { startTransition, useMemo, useState } from "react";
 import { Topping } from "@/types/topping.types";
 import { Badge } from "@/components/ui/badge";
 import { useAppDispatch } from "@/store/hooks";
@@ -41,6 +41,25 @@ const ProductModal = ({ product }: { product: Product }) => {
     useState<ChoosenConfig>(defaultConfig);
 
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+  const productPrice = useMemo(() => {
+    const toppingsPrice = selectedToppings.reduce(
+      (acc, curr) => acc + curr.price,
+      0
+    );
+
+    const chosenConfigPrice = Object.entries(choosenConfig).reduce(
+      (acc, curr) => {
+        const chosenPrice =
+          product.priceConfiguration[curr[0]].availableOptions[curr[1]];
+
+        return acc + chosenPrice;
+      },
+      0
+    );
+
+    return toppingsPrice + chosenConfigPrice;
+  }, [choosenConfig, selectedToppings, product]);
 
   const dispatch = useAppDispatch();
 
@@ -165,7 +184,7 @@ const ProductModal = ({ product }: { product: Product }) => {
             </div>
 
             <div className="mt-8 flex justify-between items-center">
-              <span className="font-bold text-lg">₹ 400</span>
+              <span className="font-bold text-lg">₹ {productPrice}</span>
               <DialogClose asChild>
                 <Button
                   className="rounded hover:cursor-pointer"
