@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGetInfiniteCategories } from "@/hooks/useGetInfiniteCatgories";
+import { useGetInfiniteCategories } from "@/hooks/api/useGetInfiniteCatgories";
 import ProductsGrid from "./products-grid";
 import { useInView } from "react-intersection-observer";
 

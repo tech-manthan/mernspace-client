@@ -21,6 +21,7 @@ import { addToCart } from "@/store/features/cart/cartSlice";
 import { toast } from "sonner";
 import { getCartItemHash } from "@/lib/get-cart-item-hash";
 import { cn } from "@/lib/utils";
+import { useCalculateProductPrice } from "@/hooks/price/useCalculateProductPrice";
 
 interface ChoosenConfig {
   [key: string]: string;
@@ -45,24 +46,11 @@ const ProductModal = ({ product }: { product: Product }) => {
 
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
-  const productPrice = useMemo(() => {
-    const toppingsPrice = selectedToppings.reduce(
-      (acc, curr) => acc + curr.price,
-      0
-    );
-
-    const chosenConfigPrice = Object.entries(choosenConfig).reduce(
-      (acc, [key, option]) => {
-        const chosenPrice =
-          product.priceConfiguration[key].availableOptions[option];
-
-        return acc + chosenPrice;
-      },
-      0
-    );
-
-    return toppingsPrice + chosenConfigPrice;
-  }, [choosenConfig, selectedToppings, product]);
+  const productPrice = useCalculateProductPrice({
+    choosenConfig: choosenConfig,
+    priceConfiguration: product.priceConfiguration,
+    toppings: selectedToppings,
+  });
 
   const cartItems = useAppSelector((state) => state.cart.cartItems);
 

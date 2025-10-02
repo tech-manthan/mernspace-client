@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useGetProducts } from "@/hooks/useGetProducts";
+import { useGetProducts } from "@/hooks/api/useGetProducts";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import {
   Pagination as Pager,

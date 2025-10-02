@@ -12,7 +12,7 @@ const CartCounter = () => {
   );
   return (
     <div className="relative">
-      <Link href={"/"} className="hover:text-primary duration-300">
+      <Link href={"/cart"} className="hover:text-primary duration-300">
         <ShoppingBasket />
       </Link>
       <Badge className="h-6 w-6 rounded-full px-1 font-mono tabular-nums absolute -top-4 -right-5">

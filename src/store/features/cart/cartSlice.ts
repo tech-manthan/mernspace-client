@@ -31,9 +31,54 @@ export const cartSlice = createSlice({
         cartItems: action.payload,
       };
     },
+    increaseCartItemQuantity: (state, action: PayloadAction<string>) => {
+      const cartItems = state.cartItems.map((item) =>
+        item.hash === action.payload ? { ...item, qty: item.qty + 1 } : item
+      );
+      window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      return {
+        cartItems: cartItems,
+      };
+    },
+
+    decreaseCartItemQuanity: (state, action: PayloadAction<string>) => {
+      const cartItems = state.cartItems
+        .map((item) =>
+          item.hash === action.payload ? { ...item, qty: item.qty - 1 } : item
+        )
+        .filter((item) => item.qty !== 0);
+      window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      return {
+        cartItems: cartItems,
+      };
+    },
+
+    removeCartItem: (state, action: PayloadAction<string>) => {
+      const cartItems = state.cartItems.filter(
+        (item) => item.hash !== action.payload
+      );
+      window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      return {
+        cartItems: cartItems,
+      };
+    },
+
+    clearCart: () => {
+      window.localStorage.setItem("cartItems", JSON.stringify([]));
+      return {
+        cartItems: [],
+      };
+    },
   },
 });
 
-export const { addToCart, setInitialCart } = cartSlice.actions;
+export const {
+  addToCart,
+  setInitialCart,
+  clearCart,
+  decreaseCartItemQuanity,
+  increaseCartItemQuantity,
+  removeCartItem,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

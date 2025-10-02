@@ -3,7 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ToppingCard from "./topping-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useGetInfiniteToppings } from "@/hooks/useGetInfiniteToppings";
+import { useGetInfiniteToppings } from "@/hooks/api/useGetInfiniteToppings";
 import { useInView } from "react-intersection-observer";
 import { Topping } from "@/types/topping.types";
 

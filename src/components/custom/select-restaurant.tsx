@@ -14,10 +14,10 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command";
-import { useGetInfiniteRestaurants } from "@/hooks/useGetInfiniteRestaurants";
+import { useGetInfiniteRestaurants } from "@/hooks/api/useGetInfiniteRestaurants";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setRestaurant } from "@/store/features/restaurant/restaurantSlice";
-import { useGetRestaurant } from "@/hooks/useGetRestaurant";
+import { useGetRestaurant } from "@/hooks/api/useGetRestaurant";
 
 export default function SelectRestaurant() {
   const [open, setOpen] = useState(false);
