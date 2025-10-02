@@ -42,7 +42,7 @@ const CartListItem = ({ item }: { item: CartItem }) => {
       key={item.hash}
       className="border-b pb-8 flex justify-between items-center"
     >
-      <div className="flex-1 flex gap-4">
+      <div className="flex gap-4">
         <Image
           src={item.image}
           width={100}
@@ -81,9 +81,7 @@ const CartListItem = ({ item }: { item: CartItem }) => {
       </div>
 
       <div className="flex justify-end gap-3 items-center">
-        <h4 className="my-6 w-[100px] text-end text-xl font-bold">
-          ₹ {itemsTotal}
-        </h4>
+        <h4 className="my-6 text-end text-xl font-bold">₹ {itemsTotal}</h4>
         <Button variant={"ghost"} size={"lg"} onClick={handleRemoveItem}>
           <Trash2 className="size-5 text-red-500" />
         </Button>

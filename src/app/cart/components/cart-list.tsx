@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import CartListItem from "./CartListItem";
+import CartListItem from "./cart-list-item";
 import { clearCart } from "@/store/features/cart/cartSlice";
 import { useCalculateCartItemsPrice } from "@/hooks/price/useCalculateCartItemsPrice";
 
@@ -27,7 +27,7 @@ const CartList = () => {
   }
 
   return (
-    <div className="w-[1000px] flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Shopping Cart</h1>
         {cartItems.length > 0 && (

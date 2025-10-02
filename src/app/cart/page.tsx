@@ -1,8 +1,8 @@
-import CartList from "./components/CartList";
+import CartList from "./components/cart-list";
 
 const CartPage = () => {
   return (
-    <div className="flex justify-center p-10">
+    <div className="container mx-auto my-10">
       <CartList />
     </div>
   );
