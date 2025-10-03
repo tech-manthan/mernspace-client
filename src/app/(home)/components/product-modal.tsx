@@ -177,7 +177,7 @@ const ProductModal = ({ product }: { product: Product }) => {
                               value={option}
                               id={option}
                               className="peer sr-only"
-                              aria-label="Large"
+                              aria-label={option}
                             />
                             <Label
                               htmlFor={option}
