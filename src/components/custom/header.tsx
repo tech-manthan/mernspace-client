@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
-import { Button } from "../ui/button";
 import SelectRestaurant from "./select-restaurant";
 import CartCounter from "./cart-counter";
+import { getSession } from "@/lib/session";
+import AuthButtons from "./auth-buttons";
 // import dynamic from "next/dynamic";
 
 // const SelectRestaurantWithoutSSR = dynamic(()=>import("./select-restaurant"),{ssr:false})
 
-const Header = () => {
+const Header = async () => {
+  const { user } = await getSession();
   return (
     <header className="bg-white sticky top-0 left-0 right-0 shadow z-10">
       <nav className="container mx-auto py-5 flex items-center justify-between">
@@ -55,7 +57,7 @@ const Header = () => {
             <Phone />
             <span>+91 7878 333 222</span>
           </div>
-          <Button size={"sm"}>Logout</Button>
+          <AuthButtons user={user} />
         </div>
       </nav>
     </header>
