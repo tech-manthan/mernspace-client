@@ -1,22 +1,21 @@
 "use client";
 
-import login, { LoginResponse } from "@/actions/login";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
 import React, { useActionState, useEffect } from "react";
 import SubmitButton from "./submit-button";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import register, { RegisterResponse } from "@/actions/register";
 import PasswordInput from "@/components/custom/password-input";
 
-const initialState: LoginResponse = {
+const initialState: RegisterResponse = {
   type: "",
   message: "",
 };
 
 const LoginForm = () => {
-  const [state, formAction] = useActionState(login, initialState);
+  const [state, formAction] = useActionState(register, initialState);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -24,7 +23,7 @@ const LoginForm = () => {
     if (state.type === "success") {
       toast.success(state.message, {});
       const redirectTo = searchParams.get("redirectTo");
-      router.push(redirectTo ? redirectTo : "/");
+      router.push(redirectTo ? redirectTo : "");
     } else if (state.type === "error") {
       toast.error(state.message);
     }
@@ -32,6 +31,19 @@ const LoginForm = () => {
   return (
     <form action={formAction}>
       <div className="grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor="firstName">First Name</Label>
+          <Input
+            id="firstName"
+            name="firstName"
+            placeholder="Manthan"
+            required
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="email">Last Name</Label>
+          <Input id="lastName" name="lastName" placeholder="Sharma" required />
+        </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -43,10 +55,7 @@ const LoginForm = () => {
           />
         </div>
         <div className="grid gap-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
-            <Link href={"/forgot-password"}>Forgot your password?</Link>
-          </div>
+          <Label htmlFor="password">Password</Label>
           <PasswordInput
             id="password"
             name="password"

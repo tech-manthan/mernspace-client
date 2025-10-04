@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import LoginForm from "./components/login-form";
+import LoginForm from "./components/register-form";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-const LoginPage = async ({
+const RegisterPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{
@@ -12,6 +12,7 @@ const LoginPage = async ({
   }>;
 }) => {
   const { redirectTo } = await searchParams;
+
   const { user } = await getSession();
 
   if (user) {
@@ -23,19 +24,19 @@ const LoginPage = async ({
       <div className="flex justify-center items-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
+            <h1 className="text-3xl font-bold">Register</h1>
             <p className="text-balance text-muted-foreground">
-              Enter your email below to login to your account
+              Enter your information to create an account
             </p>
           </div>
           <LoginForm />
           <div className="mt-4 text-sm text-center">
-            Dont&apos;t have an account{" "}
+            Already have an account{" "}
             <Link
-              href={`/register?redirectTo=${redirectTo || "/"}`}
+              href={`/login?redirectTo=${redirectTo || "/"}`}
               className="underline"
             >
-              Sign up
+              Sign in
             </Link>
           </div>
         </div>
@@ -55,4 +56,4 @@ const LoginPage = async ({
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
