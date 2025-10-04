@@ -6,6 +6,7 @@ import Header from "@/components/custom/header";
 import { Toaster } from "sonner";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import StoreProvider from "@/providers/StoreProvider";
+import TokenRefresherProvider from "@/providers/TokenRefresherProvider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -32,9 +33,11 @@ export default function RootLayout({
       >
         <StoreProvider>
           <ReactQueryProvider>
-            <Header />
-            <main>{children}</main>
-            <Toaster richColors position="top-center" />
+            <TokenRefresherProvider>
+              <Header />
+              <main>{children}</main>
+              <Toaster richColors position="top-center" />
+            </TokenRefresherProvider>
           </ReactQueryProvider>
         </StoreProvider>
       </body>
